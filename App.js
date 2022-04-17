@@ -8,12 +8,9 @@
 
 import React,{Component} from 'react';
 import {stackNavigator} from './src/pages/navigation'
+import switchNavigator  from './src/pages/navigation/switchNavigator'
 import {createAppContainer} from 'react-navigation'
 import {Text} from 'react-native'
-const AppContainer = createAppContainer(stackNavigator);
-export default class App extends Component {
-      render() {
-      return  <AppContainer/>
-    }
-}
+const AppContainer = createAppContainer(switchNavigator);
+export default AppContainer
 
