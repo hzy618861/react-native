@@ -1,6 +1,9 @@
 import React from 'react'
 import welcomePage from '../welcomePage'
 import HomePage from '../HomePage'
+import DetailPage from '../Detail'
+import FetchDemo from '../FetchDemo'
+import AsyncStorageDemo from '../AsyncStorageDemo'
 import {createStackNavigator} from 'react-navigation-stack'
 import {createAppContainer,createSwitchNavigator} from 'react-navigation'
 import {Button,Text,View} from 'react-native'
@@ -19,6 +22,15 @@ import {Button,Text,View} from 'react-native'
     navigationOptions:{
       header:null 
     }
+  },
+  DetailPage: {
+    screen: DetailPage, 
+  },
+  FetchDemo:{
+    screen: FetchDemo,
+  },
+  AsyncStorageDemo:{
+    screen: AsyncStorageDemo,
   }
 })
 
