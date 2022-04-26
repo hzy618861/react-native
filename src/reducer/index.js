@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux'
 import theme from './theme'
 import popular from './popular'
-const index = combineReducers({theme,popular})
+import trending from './trending'
+const index = combineReducers({theme,popular,trending})
 export default index

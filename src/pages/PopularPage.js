@@ -7,6 +7,7 @@ import {createAppContainer} from 'react-navigation'
 import NavigationUtil from './navigation/NavigationUtil'
 import PopularItem  from './components/popularItem'
 import Toast from 'react-native-easy-toast'
+import Navigationbar from './components/navigationBar'
 const pageSize = 10
 const styles = StyleSheet.create({
     container:{
@@ -64,6 +65,9 @@ export default  class PopularPage extends Component {
       //       }
       //   }
       // }))
+      let navgationBar = <Navigationbar title={'最热'}
+       style={{backgroundColor:"#678"}}
+        statusBar={{backgroundColor:"#678",barStyle:'light-content'}}/>
       const TopTab = createAppContainer(createMaterialTopTabNavigator(this._genTabs(),{
         tabBarOptions: {
           tabStyle: {
@@ -83,6 +87,7 @@ export default  class PopularPage extends Component {
       }))
           return (
               <View style={styles.container}>
+                  {navgationBar}
                   <TopTab/>
               </View>
           )
