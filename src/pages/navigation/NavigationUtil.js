@@ -10,4 +10,7 @@ export default class NavigationUtil {
           }
           navigation.navigate(page,{...parmas})
      }
+    static goBack(navigation) {
+        navigation.goBack();
+    }
 }

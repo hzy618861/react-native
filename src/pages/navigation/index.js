@@ -25,6 +25,9 @@ import {Button,Text,View} from 'react-native'
   },
   DetailPage: {
     screen: DetailPage, 
+    navigationOptions:{
+      header:null 
+    }
   },
   FetchDemo:{
     screen: FetchDemo,

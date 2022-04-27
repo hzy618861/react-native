@@ -126,13 +126,15 @@ class PopularTab extends Component {
     }
   
  }
- onSelect(){
-     
+ onSelect(item){
+  NavigationUtil.goPage('DetailPage',{
+     projectModel:item
+  })
  }
  renderItem(data){
    const { item } = data
    return <View style={{marginBottom:10}}>
-        <PopularItem item={item} onSelect={()=>this.onSelect}/>
+        <PopularItem item={item} onSelect={()=>this.onSelect(item)}/>
        {/* <Text style={{backgroundColor:'#faa'}}>{JSON.stringify(item)}</Text> */}
    </View>
  }

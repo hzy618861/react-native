@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {Button,View,Text,StyleSheet,TextInput,FlatList,RefreshControl,ActivityIndicator} from 'react-native'
+import {DeviceEventEmitter,Button,View,Text,StyleSheet,TextInput,FlatList,RefreshControl,ActivityIndicator,TouchableOpacity} from 'react-native'
 import {connect} from 'react-redux'
 import actions from '../action'
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs'
@@ -8,8 +8,11 @@ import NavigationUtil from './navigation/NavigationUtil'
 import TrendingItem  from './components/trendingItem'
 import Toast from 'react-native-easy-toast'
 import Navigationbar from './components/navigationBar'
+import TrendingDralog from './components/trendingDralog'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const pageSize = 10
+const timeSpan = [{label:"今天",value:"daily"},{label:"本周",value:"daily"},{label:"本月",value:"daily"}]
 const styles = StyleSheet.create({
     container:{
        flex:1,
@@ -32,24 +35,60 @@ const styles = StyleSheet.create({
     indicator:{
        color:"red",
        margin:10
+    },
+    arrow:{
+      color:"#fff"
     }
   })
 export default  class PopularPage extends Component {
      constructor(props){
        super(props)
        this.tabList = ['All','C',"C#","Php",'Javascript']
+       this.state ={
+         curSpan:{
+          label:timeSpan[0].label,
+          value:timeSpan[0].value
+        }
+       }
      }
      _genTabs(){
         const tabs = {}
+        const curSpan = this.state.curSpan
         this.tabList.forEach((item,index)=>{
             tabs[`tab${index}`] = {
-               screen: props => <PopularTabPage {...props} tabLabel={item}/>,
+               screen: props => <PopularTabPage  {...props} tabLabel={item} curSpan={curSpan}/>,
                navigationOptions:{
                   title:item
                }
             }
         })
         return tabs
+     }
+     renderTitleView(){
+        return <View>
+            <TouchableOpacity ref="button" underlayColor="transparent" onPress={()=>this.dialog.toggle(true)}>
+                 <View style={{flexDirection:"row",alignItems:"center"}}>
+                       <Text style={{fontSize:18,color:"#fff",fontWeight:"400"}}>
+                              趋势{this.state.curSpan.label}
+                       </Text>
+                       <MaterialIcons name="arrow-drop-up" size={32} style={styles.arrow}/>
+                 </View>
+                 {this.renderDialog()}
+            </TouchableOpacity>
+        </View>
+     }
+     renderDialog(){
+        return <TrendingDralog ref={dialog=>this.dialog=dialog} onSelect={tab=>this.onSelectCur(tab)}/>
+     }
+     onSelectCur(tab){
+         DeviceEventEmitter.emit('tabChange',tab)
+         this.dialog.toggle(false)
+         this.setState({
+            curSpan:{
+                label:tab.label,
+                value:tab.value
+            }
+         })
      }
      render(){
       // const TopTab = createAppContainer(createMaterialTopTabNavigator({
@@ -66,30 +105,33 @@ export default  class PopularPage extends Component {
       //       }
       //   }
       // }))
-      let navgationBar = <Navigationbar title={'趋势'}
-       style={{backgroundColor:"#678"}}
+      let navgationBar = <Navigationbar titleView={this.renderTitleView()}
+        style={{backgroundColor:"#678"}}
         statusBar={{backgroundColor:"#678",barStyle:'light-content'}}/>
-      const TopTab = createAppContainer(createMaterialTopTabNavigator(this._genTabs(),{
-        tabBarOptions: {
-          tabStyle: {
-              minWidth: 50
-          },
-          upperCaseLabel: false,//是否使标签大写，默认为true
-          scrollEnabled: true,//是否支持 选项卡滚动，默认false
-          //activeTintColor: 'white',//label和icon的前景色 活跃状态下（选中）
-          // inactiveTintColor: 'gray',//label和icon的前景色 活跃状态下（未选中）
-          style: {
-              backgroundColor: '#678',//TabBar 的背景颜色
-          },
-          indicatorStyle:styles.indicatorStyle,//标签指示器的样式
-          labelStyle:styles.labelStyle
-         },
-
-      }))
+        if(!this.TopTab){
+          this.TopTab = createAppContainer(createMaterialTopTabNavigator(this._genTabs(),{
+            tabBarOptions: {
+              tabStyle: {
+                  minWidth: 50
+              },
+              upperCaseLabel: false,//是否使标签大写，默认为true
+              scrollEnabled: true,//是否支持 选项卡滚动，默认false
+              //activeTintColor: 'white',//label和icon的前景色 活跃状态下（选中）
+              // inactiveTintColor: 'gray',//label和icon的前景色 活跃状态下（未选中）
+              style: {
+                  backgroundColor: '#678',//TabBar 的背景颜色
+              },
+              indicatorStyle:styles.indicatorStyle,//标签指示器的样式
+              labelStyle:styles.labelStyle
+             },
+    
+          }))
+        }
+    
           return (
               <View style={styles.container}>
                   {navgationBar}
-                  <TopTab/>
+                  <this.TopTab/>
               </View>
           )
      }
@@ -108,15 +150,26 @@ const  mapDispatchToProps = (dispatch) => {
 class PopularTab extends Component {
   constructor(props){
     super(props)
-    const {tabLabel} = this.props
+    const {tabLabel,curSpan} = this.props
     this.storeName = tabLabel
+    this.curSpan = curSpan
   }
  componentDidMount(){
     this.loadData()
+    this.fn = DeviceEventEmitter.addListener('tabChange',tab=>{
+       this.curSpan = tab
+       this.loadData()
+    })
+ }
+ componentWillUnmount(){
+     if(this.fn){
+        this.fn.remove()
+     }
  }
  loadData(loadMore){
     const {onLoadMoreTrendingrData,onRefreshTrending} = this.props
-    const url = `https://github.com/trending/${this.storeName}?since=daily`
+    const curSpan = this.curSpan
+    const url = `https://github.com/trending/${this.storeName}?since=${curSpan.value}`
     let store = this._store()
     if(loadMore){
       onLoadMoreTrendingrData(this.storeName,++store.pageIndex,pageSize,store.items,()=>{
