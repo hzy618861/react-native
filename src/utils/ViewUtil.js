@@ -3,8 +3,12 @@ import React from 'react'
 import  Ionicons from 'react-native-vector-icons/Ionicons'
 export default class ViewUtil{
      static getLeftButton(callback){
-          return <TouchableOpacity style={{padding:8,paddingLeft:12}} onPress={callback}>
-                   <Ionicons name={'ios-arrow-back'} size={26} style={{color:"white"}}/>
+          return <TouchableOpacity style={{paddingLeft: 12}}  onPress={callback}>
+                 <Ionicons
+                 style={{color:"white"}}
+                name={'ios-arrow-back'}
+                size={26}
+                />
           </TouchableOpacity>
      }
      static getShareButton(callback){

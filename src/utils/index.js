@@ -1,6 +1,6 @@
 import {AsyncStorage} from 'react-native'
 import Trending from 'GitHubTrending'
-export const FLAG_STORE = {flag_popular:"popular",flag_trending:"flag_trending"}
+export const FLAG_STORE = {flag_popular:"popular",flag_trending:"trending"}
 export default class DataStore {
       saveData(url,data,callback){
            if(!data || !url) return

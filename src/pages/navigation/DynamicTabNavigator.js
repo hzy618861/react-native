@@ -9,7 +9,7 @@ import React, {Component} from 'react'
 import {View,Text} from 'react-native'
 import {createAppContainer} from 'react-navigation'
 import {BottomTabBar, createBottomTabNavigator} from 'react-navigation-tabs'
-
+import EventBus from 'react-native-event-bus'
 import {connect} from 'react-redux'
 const tabs = {
   PopularPage: {
@@ -66,7 +66,12 @@ class DynamicTabNavigator extends  Component {
      }
       render(){
           const Tab =  this._tabNavigator()
-          return  <Tab/>
+          return  <Tab onNavigationStateChange={(preState,nextState,action)=>{
+            EventBus.getInstance().fireEvent('bottom_tab_select',{
+              from:preState.index,
+              to:nextState.index
+            })
+          }}/>
      }
 }
 const mapStateToProps = state => ({

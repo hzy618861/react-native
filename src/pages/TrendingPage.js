@@ -10,7 +10,8 @@ import Toast from 'react-native-easy-toast'
 import Navigationbar from './components/navigationBar'
 import TrendingDralog from './components/trendingDralog'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-
+import FavoriteDao from '../utils/favorite'
+const favoriteDao = new FavoriteDao('trending')
 const pageSize = 10
 const timeSpan = [{label:"今天",value:"daily"},{label:"本周",value:"daily"},{label:"本月",value:"daily"}]
 const styles = StyleSheet.create({
@@ -186,7 +187,7 @@ class PopularTab extends Component {
  renderItem(data){
    const { item } = data
    return <View style={{marginBottom:10}}>
-        <TrendingItem item={item} onSelect={()=>this.onSelect}/>
+        <TrendingItem projectModel={item} onSelect={()=>this.onSelect } onFavorite={(item,isFavorite)=>FavoriteDao.onFavorite(favoriteDao,item,isFavorite,'favorite_trending')}/>
        {/* <Text style={{backgroundColor:'#faa'}}>{JSON.stringify(item)}</Text> */}
    </View>
  }

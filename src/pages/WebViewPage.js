@@ -12,19 +12,16 @@ const styles = StyleSheet.create({
     }
    
   })
-export default  class Detail extends Component {
+export default  class WebViewPage extends Component {
     constructor(props){
       super(props)
       this.params = this.props.navigation.state.params
-      const {projectModel} = this.params
-      const data = projectModel.item
-      const url = data.html_url || 'https://github.com/'+data.fullName
-      const title = data.full_name ||  data.fullName
+      const {title,url} = this.params
+
       this.backPress = new BackPressComponent({backPress: ()=>this.onBackPress()})
       this.state ={
         title,
         url,
-        isFavorite:projectModel.isFavorite,
         canGoback:false
       }
     }
@@ -38,18 +35,7 @@ export default  class Detail extends Component {
       componentWillUnmount(){
           this.backPress.componentWillUnmount()
       }
-      renderRightButton(){
-        return (<View style={{flexDirection:"row",alignItems:"center"}}>
-            <TouchableOpacity onPress={()=>{}}>
-                   <FontAwesome name={this.state.isFavorite?'star':'star-o'} size={20} style={{color:"white",marginRight:10}}/>
-            </TouchableOpacity>
-            {
-              ViewUtil.getShareButton(()=>{
-                  
-              })
-            }
-        </View>)
-    }
+
     onNavigationStateChange(e){
          this.setState({
            ...this.state,
@@ -65,13 +51,10 @@ export default  class Detail extends Component {
        }
      }
      render(){
-          const titleLayoutStyle = this.state.title.length>20?{paddingRight:30}:null
           return (
               <View style={styles.container}>
                   <NavgationBar title={this.state.title} 
-                   titleLayoutStyle = {titleLayoutStyle}
                    leftButton={ViewUtil.getLeftButton(()=>this.onBack())}
-                   rightButton={this.renderRightButton()}
                    style={{backgroundColor:'#678'}}/>
                   <WebView
                   ref={webview=>this.webview = webview }

@@ -8,6 +8,8 @@ import NavigationUtil from './navigation/NavigationUtil'
 import PopularItem  from './components/popularItem'
 import Toast from 'react-native-easy-toast'
 import Navigationbar from './components/navigationBar'
+import FavoriteDao from '../utils/favorite'
+const favoriteDao = new FavoriteDao('popular')
 const pageSize = 10
 const styles = StyleSheet.create({
     container:{
@@ -33,6 +35,7 @@ const styles = StyleSheet.create({
        margin:10
     }
   })
+
 export default  class PopularPage extends Component {
      constructor(props){
        super(props)
@@ -100,8 +103,8 @@ const mapStateToProps =  (state) =>{
 }
 const  mapDispatchToProps = (dispatch) => {
   return {
-    onRefreshPopularData: (storeName,url,pageSize) => dispatch(actions.onRefreshPopularData(storeName,url,pageSize)),
-    onLoadMorePopularData: (storeName,pageIndex,pageSize,items,callback) => dispatch(actions.onLoadMorePopularData(storeName,pageIndex,pageSize,items,callback))
+    onRefreshPopularData: (storeName,url,pageSize,favoriteDao) => dispatch(actions.onRefreshPopularData(storeName,url,pageSize,favoriteDao)),
+    onLoadMorePopularData: (storeName,pageIndex,pageSize,items,callback,favoriteDao) => dispatch(actions.onLoadMorePopularData(storeName,pageIndex,pageSize,items,callback,favoriteDao))
   }
 }
 class PopularTab extends Component {
@@ -120,9 +123,9 @@ class PopularTab extends Component {
     if(loadMore){
       onLoadMorePopularData(this.storeName,++store.pageIndex,pageSize,store.items,()=>{
           this.refs.toast.show('沒有更多了')
-      })
+      },favoriteDao)
     }else{
-      onRefreshPopularData(this.storeName,url,pageSize)
+      onRefreshPopularData(this.storeName,url,pageSize,favoriteDao)
     }
   
  }
@@ -134,7 +137,7 @@ class PopularTab extends Component {
  renderItem(data){
    const { item } = data
    return <View style={{marginBottom:10}}>
-        <PopularItem item={item} onSelect={()=>this.onSelect(item)}/>
+        <PopularItem projectModel={item} onSelect={()=>this.onSelect(item)} onFavorite={(item,isFavorite)=>FavoriteDao.onFavorite(favoriteDao,item,isFavorite,'favorite_popular')}/>
        {/* <Text style={{backgroundColor:'#faa'}}>{JSON.stringify(item)}</Text> */}
    </View>
  }
@@ -175,6 +178,7 @@ class PopularTab extends Component {
                tintColor={'red'}
              />
           }
+         
           ListFooterComponent={()=>this.genFooter()}
           onEndReached={()=>{
             setTimeout(()=>{

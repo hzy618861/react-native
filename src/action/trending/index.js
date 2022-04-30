@@ -1,21 +1,21 @@
 import Types from '../types'
 import DataStore, { FLAG_STORE } from '../../utils'
-import {handleData} from '../actionUtil'
+import {handleData, _projectModels} from '../actionUtil'
 //获取最热数据action
-export  function onRefreshTrending(storeName,url,pageSize){
+export  function onRefreshTrending(storeName,url,pageSize,favoriteDao){
      //触发异步action
      return  dispatch => {
           dispatch({type:Types.POPULAR_REFRESH,storeName})
           let dataStore = new DataStore()
           dataStore.fetchData(url,FLAG_STORE.flag_trending).then(res=>{
-            handleData(Types.TRENDING_REFRESH_SUCCESS,dispatch,storeName,res,pageSize)
+            handleData(Types.TRENDING_REFRESH_SUCCESS,dispatch,storeName,res,pageSize,favoriteDao)
           }).catch(err=>{
                console.log(err)
                dispatch({type:Types.TRENDING_REFRESH_FAIL,storeName,err})
           })
      }
 }
-export  function onLoadMoreTrending(storeName,pageIndex,pageSize,dataArray=[],callBack){
+export  function onLoadMoreTrending(storeName,pageIndex,pageSize,dataArray=[],callBack,favoriteDao){
      //触发异步action
      return  dispatch => {
           setTimeout(()=>{
@@ -33,12 +33,14 @@ export  function onLoadMoreTrending(storeName,pageIndex,pageSize,dataArray=[],ca
                 }else{
                      console.log('88888811')
                      let max = pageSize*pageIndex > dataArray.length?dataArray.length:pageSize*pageIndex
-                     dispatch({
+                   _projectModels(dataArray.slice(0,max),favoriteDao,projectModes=>{
+                    dispatch({
                          type:Types.TRENDING_LOAD_MORE_SUCCESS,
                          storeName,
                          pageIndex,
-                         projectModes:dataArray.slice(0,max)
+                         projectModes
                    })
+                })
                 }
           },500)
      }
