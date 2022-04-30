@@ -1,4 +1,4 @@
-import {TouchableOpacity} from 'react-native'
+import {TouchableOpacity,Text} from 'react-native'
 import React from 'react'
 import  Ionicons from 'react-native-vector-icons/Ionicons'
 export default class ViewUtil{
@@ -11,6 +11,13 @@ export default class ViewUtil{
                 />
           </TouchableOpacity>
      }
+     static getRightButton(title, callBack) {
+          return <TouchableOpacity
+              style={{alignItems: 'center',}}
+              onPress={callBack}>
+              <Text style={{fontSize: 20, color: '#FFFFFF', marginRight: 10}}>{title}</Text>
+          </TouchableOpacity>
+      }
      static getShareButton(callback){
           return <TouchableOpacity  underlayColor="transparent" onPress={callback}>
                    <Ionicons name={'md-share'} size={26} style={{color:"white",opacity:0.9,marginRight:10}}/>

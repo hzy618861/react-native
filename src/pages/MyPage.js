@@ -9,6 +9,7 @@ import {MORE_MENU} from '../utils/menu'
 import Line from './components/line'
 import ListItem from './components/listItem'
 import NavigationUtil from './navigation/NavigationUtil'
+import {FLAG_LANGUAGE} from "../utils/LanguageDao";
 const styles = StyleSheet.create({
     container:{
        flex:1,
@@ -68,6 +69,13 @@ const styles = StyleSheet.create({
               routeName = 'AboutMePage'
               params.url = 'https://coding.m.imooc.com/classindex.html?cid=85'
               break
+          case MORE_MENU.Custom_Key:
+          case MORE_MENU.Custom_Language:
+          case MORE_MENU.Remove_Key:
+               routeName = 'CustomKeyPage';
+               params.isRemoveKey = menu === MORE_MENU.Remove_Key;
+               params.flag = menu !== MORE_MENU.Custom_Language ? FLAG_LANGUAGE.flag_key : FLAG_LANGUAGE.flag_language;
+               break;
         }   
         if(routeName){
            NavigationUtil.goPage(routeName,params)
@@ -104,7 +112,7 @@ const styles = StyleSheet.create({
                         icon={MORE_MENU.Custom_Language.icon} 
                         color={'#678'}
                         text={'自定义语言'} 
-                        callback={()=>this.onClick(menu)}/>
+                        callback={()=>this.onClick(MORE_MENU.Custom_Language)}/>
                           <Line/>
                          <ListItem
                         Icons={MORE_MENU.Sort_Language.Icons} 
@@ -119,7 +127,7 @@ const styles = StyleSheet.create({
                         icon={MORE_MENU.Custom_Language.icon} 
                         color={'#678'}
                         text={'自定义标签'} 
-                        callback={()=>this.onClick(menu)}/>
+                        callback={()=>this.onClick(MORE_MENU.Custom_Key)}/>
                           <Line/>
                          <ListItem
                         Icons={MORE_MENU.Sort_Language.Icons} 

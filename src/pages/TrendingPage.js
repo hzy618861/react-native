@@ -11,6 +11,8 @@ import Navigationbar from './components/navigationBar'
 import TrendingDralog from './components/trendingDralog'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FavoriteDao from '../utils/favorite'
+import {FLAG_LANGUAGE} from '../utils/LanguageDao'
+import arrayUtil from '../utils/array'
 const favoriteDao = new FavoriteDao('trending')
 const pageSize = 10
 const timeSpan = [{label:"今天",value:"daily"},{label:"本周",value:"daily"},{label:"本月",value:"daily"}]
@@ -41,10 +43,13 @@ const styles = StyleSheet.create({
       color:"#fff"
     }
   })
-export default  class PopularPage extends Component {
+  class TrendingPage extends Component {
      constructor(props){
        super(props)
-       this.tabList = ['All','C',"C#","Php",'Javascript']
+      //  this.tabList = ['All','C',"C#","Php",'Javascript']
+      const {onLoadLanguage} = this.props
+      onLoadLanguage(FLAG_LANGUAGE.flag_language)
+      this.preKeys = []
        this.state ={
          curSpan:{
           label:timeSpan[0].label,
@@ -55,13 +60,18 @@ export default  class PopularPage extends Component {
      _genTabs(){
         const tabs = {}
         const curSpan = this.state.curSpan
-        this.tabList.forEach((item,index)=>{
+        const {keys} = this.props
+
+        this.preKeys = keys
+        keys.forEach((item,index)=>{
+           if(item.checked){
             tabs[`tab${index}`] = {
-               screen: props => <PopularTabPage  {...props} tabLabel={item} curSpan={curSpan}/>,
-               navigationOptions:{
-                  title:item
-               }
-            }
+              screen: props => <PopularTabPage  {...props} tabLabel={item.name} curSpan={curSpan}/>,
+              navigationOptions:{
+                 title:item.name
+              }
+           }
+           }
         })
         return tabs
      }
@@ -106,11 +116,12 @@ export default  class PopularPage extends Component {
       //       }
       //   }
       // }))
+      const {keys} = this.props
       let navgationBar = <Navigationbar titleView={this.renderTitleView()}
         style={{backgroundColor:"#678"}}
         statusBar={{backgroundColor:"#678",barStyle:'light-content'}}/>
-        if(!this.TopTab){
-          this.TopTab = createAppContainer(createMaterialTopTabNavigator(this._genTabs(),{
+        if(!this.TopTab||!arrayUtil.isEqual(this.props.keys,this.preKeys)){
+          this.TopTab = createAppContainer(createMaterialTopTabNavigator(keys.length>0?this._genTabs():null,{
             tabBarOptions: {
               tabStyle: {
                   minWidth: 50
@@ -132,7 +143,7 @@ export default  class PopularPage extends Component {
           return (
               <View style={styles.container}>
                   {navgationBar}
-                  <this.TopTab/>
+                  { this.TopTab && <this.TopTab/>}
               </View>
           )
      }
@@ -148,6 +159,13 @@ const  mapDispatchToProps = (dispatch) => {
     onLoadMoreTrendingrData: (storeName,pageIndex,pageSize,items,callback) => dispatch(actions.onLoadMoreTrending(storeName,pageIndex,pageSize,items,callback))
   }
 }
+const mapTrendingStateToProps = state => ({
+  keys: state.language.languages,
+});
+const mapTrendingDispatchToProps = dispatch => ({
+  onLoadLanguage: (flag) => dispatch(actions.onLoadLanguage(flag)),
+});
+export default connect(mapTrendingStateToProps, mapTrendingDispatchToProps)(TrendingPage);
 class PopularTab extends Component {
   constructor(props){
     super(props)

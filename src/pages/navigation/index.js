@@ -5,6 +5,7 @@ import DetailPage from '../Detail'
 import FetchDemo from '../FetchDemo'
 import AboutPage from '../AboutPage'
 import AboutMePage from '../AboutMePage'
+import CustomKeyPage from '../CustomKeyPage'
 import AsyncStorageDemo from '../AsyncStorageDemo'
 import WebViewPage from '../WebViewPage'
 import {createStackNavigator} from 'react-navigation-stack'
@@ -40,6 +41,12 @@ import {Button,Text,View} from 'react-native'
   },
   AboutMePage: {
     screen: AboutMePage, 
+    navigationOptions:{
+      header:null 
+    }
+  },
+  CustomKeyPage:{
+    screen: CustomKeyPage, 
     navigationOptions:{
       header:null 
     }
