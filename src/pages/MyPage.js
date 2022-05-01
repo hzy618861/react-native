@@ -76,6 +76,10 @@ const styles = StyleSheet.create({
                params.isRemoveKey = menu === MORE_MENU.Remove_Key;
                params.flag = menu !== MORE_MENU.Custom_Language ? FLAG_LANGUAGE.flag_key : FLAG_LANGUAGE.flag_language;
                break;
+           case MORE_MENU.Sort_Key:
+                  routeName = 'SortKeyPage'
+                  params.flag = FLAG_LANGUAGE.flag_key;
+                  break
         }   
         if(routeName){
            NavigationUtil.goPage(routeName,params)
@@ -130,11 +134,11 @@ const styles = StyleSheet.create({
                         callback={()=>this.onClick(MORE_MENU.Custom_Key)}/>
                           <Line/>
                          <ListItem
-                        Icons={MORE_MENU.Sort_Language.Icons} 
-                        icon={MORE_MENU.Sort_Language.icon} 
+                        Icons={MORE_MENU.Sort_Key.Icons} 
+                        icon={MORE_MENU.Sort_Key.icon} 
                         color={'#678'}
                         text={'标签排序'} 
-                        callback={()=>this.onClick(menu)}/>
+                        callback={()=>this.onClick(MORE_MENU.Sort_Key)}/>
                           <Line/>
                           <ListItem
                         Icons={MORE_MENU.Sort_Language.Icons} 

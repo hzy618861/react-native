@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
           indicatorStyle:styles.indicatorStyle,//标签指示器的样式
           labelStyle:styles.labelStyle
          },
-
+         lazy:true
       })):null
           return (
               <View style={styles.container}>

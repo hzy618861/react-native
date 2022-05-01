@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import {Button,View,Text,StyleSheet,TextInput} from 'react-native'
 import DynamicTabNavigator from './navigation/DynamicTabNavigator'
 import NavigationUtil from './navigation/NavigationUtil'
-
+import SafeAreaViewPlus from './components/SafeAreaViewPlus'
 const styles = StyleSheet.create({
     container:{
        flex:1,
@@ -23,6 +23,8 @@ export default  class HomePage extends Component {
      render(){
           //解决动态导航组件页面无法跳转问题
           NavigationUtil.navigation = this.props.navigation
-          return  <DynamicTabNavigator/>
+          return <SafeAreaViewPlus>
+                <DynamicTabNavigator/>
+          </SafeAreaViewPlus>
      }
 }

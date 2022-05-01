@@ -6,6 +6,7 @@ import FetchDemo from '../FetchDemo'
 import AboutPage from '../AboutPage'
 import AboutMePage from '../AboutMePage'
 import CustomKeyPage from '../CustomKeyPage'
+import SortKeyPage from '../SortKeyPage'
 import AsyncStorageDemo from '../AsyncStorageDemo'
 import WebViewPage from '../WebViewPage'
 import {createStackNavigator} from 'react-navigation-stack'
@@ -47,6 +48,12 @@ import {Button,Text,View} from 'react-native'
   },
   CustomKeyPage:{
     screen: CustomKeyPage, 
+    navigationOptions:{
+      header:null 
+    }
+  },
+  SortKeyPage:{
+    screen: SortKeyPage, 
     navigationOptions:{
       header:null 
     }
